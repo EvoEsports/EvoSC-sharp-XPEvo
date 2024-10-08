@@ -25,6 +25,7 @@ using EvoSC.Modules.Official.Player;
 using EvoSC.Modules.Official.PlayerRecords;
 using EvoSC.Modules.Official.RoundRankingModule;
 using EvoSC.Modules.Official.Scoreboard;
+using EvoSC.Modules.Official.ScoreboardModule;
 using EvoSC.Modules.Official.ServerManagementModule;
 using EvoSC.Modules.Official.SetName;
 using EvoSC.Modules.Official.SpectatorCamModeModule;
