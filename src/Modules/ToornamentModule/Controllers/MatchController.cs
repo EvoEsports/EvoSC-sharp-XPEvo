@@ -8,6 +8,7 @@ using EvoSC.Common.Remote;
 using EvoSC.Common.Remote.EventArgsModels;
 using EvoSC.Modules.EvoEsports.ToornamentModule.Interfaces;
 using EvoSC.Modules.EvoEsports.ToornamentModule.Settings;
+using EvoSC.Modules.Official.MatchManagerModule.Events;
 using EvoSC.Modules.Official.MatchReadyModule.Events;
 using EvoSC.Modules.Official.MatchReadyModule.Events.Args;
 using GbxRemoteNet.Events;
@@ -20,8 +21,9 @@ public class MatchController(
     IMatchService matchService,
     IServerClient server,
     IToornamentSettings settings,
-    ILogger<MatchController> logger,
-    IWhitelistService whitelistService) : EvoScController<IEventControllerContext>
+    IWhitelistService whitelistService,
+    IMatchSettingsCreatorService creatorService,
+    ILogger<MatchController> logger) : EvoScController<IEventControllerContext>
 {
     [Subscribe(MatchReadyEvents.AllPlayersReady)]
     public async Task OnAllPlayersReadyAsync(object sender, AllPlayersReadyEventArgs args)
