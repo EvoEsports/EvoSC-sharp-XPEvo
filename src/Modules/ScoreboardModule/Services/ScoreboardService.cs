@@ -24,7 +24,9 @@ public class ScoreboardService(
     private const string ScoreboardTemplate = "ScoreboardModule.Scoreboard";
     private const string MetaDataTemplate = "ScoreboardModule.MetaData";
     private readonly object _currentRoundMutex = new();
+    private readonly object _isWarmUpMutex = new();
     private int _roundNumber = 1;
+    private bool _isWarmUp;
 
     public async Task SendScoreboardAsync()
     {
@@ -37,14 +39,10 @@ public class ScoreboardService(
     {
         var currentNextMaxPlayers = await server.Remote.GetMaxPlayersAsync();
         var currentNextMaxSpectators = await server.Remote.GetMaxSpectatorsAsync();
-        var modeScriptSettings = await matchSettingsService.GetCurrentScriptSettingsAsync();
 
         return new
         {
-            settings,
-            MaxPlayers = currentNextMaxPlayers.CurrentValue + currentNextMaxSpectators.CurrentValue,
-            PointsLimit = (int)(modeScriptSettings?.GetValueOrDefault("S_PointsLimit") ?? 0),
-            RoundsPerMap = (int)(modeScriptSettings?.GetValueOrDefault("S_RoundsPerMap") ?? 0),
+            settings, MaxPlayers = currentNextMaxPlayers.CurrentValue + currentNextMaxSpectators.CurrentValue,
         };
     }
 
@@ -76,15 +74,39 @@ public class ScoreboardService(
         await SendMetaDataAsync();
     }
 
+    public Task SetIsWarmUpAsync(bool isWarmUp)
+    {
+        lock (_isWarmUpMutex)
+        {
+            _isWarmUp = isWarmUp;
+        }
+
+        return Task.CompletedTask;
+    }
+
     public async Task SendMetaDataAsync()
     {
+        var modeScriptSettings = await matchSettingsService.GetCurrentScriptSettingsAsync();
         int roundNumber;
+        bool isWarmUp;
 
         lock (_currentRoundMutex)
         {
             roundNumber = _roundNumber;
         }
 
-        await manialinks.SendPersistentManialinkAsync(MetaDataTemplate, new { roundNumber });
+        lock (_isWarmUpMutex)
+        {
+            isWarmUp = _isWarmUp;
+        }
+
+        await manialinks.SendPersistentManialinkAsync(MetaDataTemplate, new
+        {
+            roundNumber,
+            isWarmUp,
+            warmUpCount = (int)(modeScriptSettings?.GetValueOrDefault("S_WarmUpNb") ?? 0),
+            roundsPerMap = (int)(modeScriptSettings?.GetValueOrDefault("S_RoundsPerMap") ?? 0),
+            pointsLimit = (int)(modeScriptSettings?.GetValueOrDefault("S_PointsLimit") ?? 0),
+        });
     }
 }

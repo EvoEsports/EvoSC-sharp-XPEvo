@@ -25,6 +25,13 @@ public interface IScoreboardService
     public Task SetCurrentRoundAsync(int roundNumber);
 
     /// <summary>
+    /// Sets whether warm is currently ongoing.
+    /// </summary>
+    /// <param name="isWarmUp"></param>
+    /// <returns></returns>
+    public Task SetIsWarmUpAsync(bool isWarmUp);
+
+    /// <summary>
     /// Sends the MetaData manialink.
     /// </summary>
     /// <returns></returns>

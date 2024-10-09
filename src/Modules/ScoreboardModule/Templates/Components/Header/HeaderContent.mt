@@ -3,9 +3,6 @@
 
     <import component="ScoreboardModule.Components.Header.Logo" as="Logo"/>
 
-    <property type="int" name="maxPlayers" default="0"/>
-    <property type="int" name="pointsLimit" default="0"/>
-    <property type="int" name="roundsPerMap" default="0"/>
     <property type="double" name="width"/>
     <property type="double" name="height"/>
     <property type="double" name="padding" default="3.4"/>
@@ -65,18 +62,38 @@
     
     Text GetRoundsLabelText() {
         declare Integer EvoSC_RoundNumber for UI = -1;
-        return TL::ToUpperCase("Round " ^ EvoSC_RoundNumber ^ " of {{ roundsPerMap }}");
+        declare Integer EvoSC_RoundsPerMap for UI = -1;
+        return TL::ToUpperCase("Round " ^ EvoSC_RoundNumber ^ " of " ^ EvoSC_RoundsPerMap);
     }
     
-    Text GetPointsLimitTest() {
-        return TL::ToUpperCase("Points Limit {{ pointsLimit }}");
+    Text GetRoundsLabelWarmUpText() {
+        declare Integer EvoSC_RoundNumber for UI = -1;
+        declare Integer EvoSC_WarmUpCount for UI = -1;
+        return "$f90" ^ TL::ToUpperCase("Round " ^ EvoSC_RoundNumber ^ " of " ^ EvoSC_WarmUpCount);
+    }
+    
+    Text GetPointsLimitText() {
+        declare Integer EvoSC_PointsLimit for UI = -1;
+        return TL::ToUpperCase("Points Limit " ^ EvoSC_PointsLimit);
+    }
+    
+    Text GetPointsLimitWarmUpText() {
+        return "$f90WARM UP";
     }
     
     Void UpdateHeader() {
+        declare Boolean EvoSC_WarmUpActive for UI = False;
+        
         HeaderContentFrame_TextLeft.Value = TL::StripFormatting(CurrentServerName);
         HeaderContentFrame_TextRight.Value = TL::StripFormatting(TL::Trim(Map.MapName ^ " by " ^ Map.AuthorNickName));
-        HeaderContentFrame_TextLeftSmall.Value = GetPointsLimitTest();
-        HeaderContentFrame_TextRightSmall.Value = GetRoundsLabelText();
+        
+        if(EvoSC_WarmUpActive){
+            HeaderContentFrame_TextLeftSmall.Value = GetPointsLimitWarmUpText();
+            HeaderContentFrame_TextRightSmall.Value = GetRoundsLabelWarmUpText();
+        }else{
+            HeaderContentFrame_TextLeftSmall.Value = GetPointsLimitText();
+            HeaderContentFrame_TextRightSmall.Value = GetRoundsLabelText();
+        }
     }
     --></script>
 
@@ -93,7 +110,7 @@
         
         *** OnLoop *** 
         ***
-            if(Now > HeaderContentFrameLastUpdate + 2500){
+            if(Now > HeaderContentFrameLastUpdate + 1000){
                 HeaderContentFrameLastUpdate = Now;
                 UpdateHeader();
             }

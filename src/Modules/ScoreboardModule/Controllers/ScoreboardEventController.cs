@@ -35,4 +35,27 @@ public class ScoreboardEventController(
     [Subscribe(ModeScriptEvent.EndRoundEnd)]
     public Task OnEndRoundAsync(object sender, RoundEventArgs args) =>
         scoreboardService.SetCurrentRoundAsync(args.Count + 1);
+
+    [Subscribe(ModeScriptEvent.WarmUpStart)]
+    public async Task OnWarmUpStartAsync(object sender, EventArgs args)
+    {
+        await scoreboardService.SetIsWarmUpAsync(true);
+        await scoreboardService.SetCurrentRoundAsync(1);
+        await scoreboardService.SendMetaDataAsync();
+    }
+
+    [Subscribe(ModeScriptEvent.WarmUpEnd)]
+    public async Task OnWarmUpEndAsync(object sender, EventArgs args)
+    {
+        await scoreboardService.SetIsWarmUpAsync(false);
+        await scoreboardService.SetCurrentRoundAsync(1);
+        await scoreboardService.SendMetaDataAsync();
+    }
+
+    [Subscribe(ModeScriptEvent.WarmUpStartRound)]
+    public async Task OnWarmUpStartRoundAsync(object sender, WarmUpRoundEventArgs args)
+    {
+        await scoreboardService.SetIsWarmUpAsync(true);
+        await scoreboardService.SetCurrentRoundAsync(args.Current);
+    }
 }
