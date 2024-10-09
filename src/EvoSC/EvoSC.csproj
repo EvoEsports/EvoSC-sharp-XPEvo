@@ -40,7 +40,6 @@
         <ProjectReference Include="..\Modules\NextMapModule\NextMapModule.csproj" />
         <ProjectReference Include="..\Modules\ScoreboardModule\ScoreboardModule.csproj" />
         <ProjectReference Include="..\Modules\RoundRankingModule\RoundRankingModule.csproj" />
-        <ProjectReference Include="..\Modules\Scoreboard\Scoreboard.csproj" />
         <ProjectReference Include="..\Modules\MapsModule\MapsModule.csproj" />
         <ProjectReference Include="..\Modules\MatchManagerModule\MatchManagerModule.csproj" />
         <ProjectReference Include="..\Modules\MatchReadyModule\MatchReadyModule.csproj" />
@@ -50,7 +49,6 @@
         <ProjectReference Include="..\Modules\MatchReadyModule\MatchReadyModule.csproj" />
         <ProjectReference Include="..\Modules\MatchTrackerModule\MatchTrackerModule.csproj" />
         <ProjectReference Include="..\Modules\NextMapModule\NextMapModule.csproj" />
-        <ProjectReference Include="..\Modules\Scoreboard\Scoreboard.csproj" />
         <ProjectReference Include="..\Modules\MapsModule\MapsModule.csproj" />
         <ProjectReference Include="..\Modules\MatchManagerModule\MatchManagerModule.csproj" />
         <ProjectReference Include="..\Modules\ASayModule\ASayModule.csproj" />
@@ -66,8 +64,6 @@
         <PackageReference Include="toornamentapi" Version="1.2.0" />
         <ProjectReference Include="..\Modules\ContactAdminModule\ContactAdminModule.csproj" />
         <ProjectReference Include="..\Modules\RoundRankingModule\RoundRankingModule.csproj" />
-        <ProjectReference Include="..\Modules\Scoreboard\Scoreboard.csproj" />
-        <ProjectReference Include="..\Modules\ScoreboardModule\ScoreboardModule.csproj" />
         <ProjectReference Include="..\Modules\ServerSyncModule\ServerSyncModule.csproj" />
         <ProjectReference Include="..\Modules\ToornamentModule\ToornamentModule.csproj" />
         <ProjectReference Include="..\Modules\WorldRecordModule\WorldRecordModule.csproj" />

@@ -43,8 +43,8 @@ public class ScoreboardService(
         {
             settings,
             MaxPlayers = currentNextMaxPlayers.CurrentValue + currentNextMaxSpectators.CurrentValue,
-            PointsLimit = (int)(modeScriptSettings?["S_PointsLimit"] ?? 0),
-            RoundsPerMap = (int)(modeScriptSettings?["S_RoundsPerMap"] ?? 0),
+            PointsLimit = (int)(modeScriptSettings?.GetValueOrDefault("S_PointsLimit") ?? 0),
+            RoundsPerMap = (int)(modeScriptSettings?.GetValueOrDefault("S_RoundsPerMap") ?? 0),
         };
     }
 
