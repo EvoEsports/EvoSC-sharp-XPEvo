@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using EvoSC.Common.Interfaces;
 using EvoSC.Common.Interfaces.Models;
@@ -127,7 +128,7 @@ public class MatchSettingsCreatorService(
         await notifyService.NotifyMatchInfoAsync(matchName, mapsToAdd);
 
         kvService.CreateOrUpdateEntry(matchInfo.Id + "-pointsLimit",
-            BitConverter.GetBytes(settingsData.Scripts.S_PointsLimit));
+            Encoding.ASCII.GetBytes(settingsData.Scripts.S_PointsLimit.ToString()));
 
         logger.LogTrace("End of CreateMatchSettingsAsync()");
         return name;
