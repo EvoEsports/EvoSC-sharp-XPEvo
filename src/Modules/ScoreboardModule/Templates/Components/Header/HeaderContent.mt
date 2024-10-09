@@ -64,8 +64,8 @@
     declare CMlLabel HeaderContentFrame_TextRightSmall;
     
     Text GetRoundsLabelText() {
-        declare currentRound = -1; //TODO: get current round
-        return TL::ToUpperCase("Round " ^ currentRound ^ " of {{ roundsPerMap }}");
+        declare Integer EvoSC_RoundNumber for UI = -1;
+        return TL::ToUpperCase("Round " ^ EvoSC_RoundNumber ^ " of {{ roundsPerMap }}");
     }
     
     Text GetPointsLimitTest() {

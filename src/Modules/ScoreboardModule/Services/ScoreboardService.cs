@@ -10,7 +10,7 @@ using EvoSC.Modules.Official.ScoreboardModule.Interfaces;
 
 namespace EvoSC.Modules.Official.ScoreboardModule.Services;
 
-[Service(LifeStyle = ServiceLifeStyle.Transient)]
+[Service(LifeStyle = ServiceLifeStyle.Singleton)]
 public class ScoreboardService(
     IManialinkManager manialinks,
     IServerClient server,
@@ -22,9 +22,13 @@ public class ScoreboardService(
     : IScoreboardService
 {
     private const string ScoreboardTemplate = "ScoreboardModule.Scoreboard";
+    private const string MetaDataTemplate = "ScoreboardModule.MetaData";
+    private readonly object _currentRoundMutex = new();
+    private int _roundNumber = 1;
 
     public async Task SendScoreboardAsync()
     {
+        await SendMetaDataAsync();
         await manialinks.SendPersistentManialinkAsync(ScoreboardTemplate, await GetDataAsync());
         await nicknamesService.SendNicknamesManialinkAsync();
     }
@@ -61,4 +65,26 @@ public class ScoreboardService(
             0.0,
             1.0
         );
+
+    public async Task SetCurrentRoundAsync(int roundNumber)
+    {
+        lock (_currentRoundMutex)
+        {
+            _roundNumber = roundNumber;
+        }
+
+        await SendMetaDataAsync();
+    }
+
+    public async Task SendMetaDataAsync()
+    {
+        int roundNumber;
+
+        lock (_currentRoundMutex)
+        {
+            roundNumber = _roundNumber;
+        }
+
+        await manialinks.SendPersistentManialinkAsync(MetaDataTemplate, new { roundNumber });
+    }
 }

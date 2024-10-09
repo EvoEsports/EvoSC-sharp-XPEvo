@@ -16,4 +16,17 @@ public interface IScoreboardService
     /// Shows the default game scoreboard.
     /// </summary>
     public Task ShowNadeoScoreboardAsync();
+
+    /// <summary>
+    /// Sets the current round number.
+    /// </summary>
+    /// <param name="roundNumber"></param>
+    /// <returns></returns>
+    public Task SetCurrentRoundAsync(int roundNumber);
+
+    /// <summary>
+    /// Sends the MetaData manialink.
+    /// </summary>
+    /// <returns></returns>
+    public Task SendMetaDataAsync();
 }
