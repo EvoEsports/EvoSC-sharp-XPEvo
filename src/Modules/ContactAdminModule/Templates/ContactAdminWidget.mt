@@ -16,7 +16,7 @@
           
               *** OnLoop ***
               ***
-                  ButtonElement.Visible = IsSpectatorClient;
+                  ButtonElement.Visible = !IsSpectatorClient;
               ***
           
               *** OnMouseClick ***
