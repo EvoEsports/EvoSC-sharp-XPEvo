@@ -11,7 +11,7 @@
           <!--
               *** OnInitialization ***
               ***
-                  declare ButtonElement <=> Page.GetFirstChild("ContactAdminButton");
+                  declare ButtonElement <=> Page.GetFirstChild("ContactAdminButton-frame");
               ***
           
               *** OnLoop ***
