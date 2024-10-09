@@ -122,7 +122,7 @@ public class RoundRankingService(
     public async Task LoadPointsRepartitionFromSettingsAsync()
     {
         var modeScriptSettings = await matchSettingsService.GetCurrentScriptSettingsAsync();
-        var pointsRepartitionString = (string?)modeScriptSettings?[PointsRepartition.ModeScriptSetting];
+        var pointsRepartitionString = (string?)modeScriptSettings?.GetValueOrDefault(PointsRepartition.ModeScriptSetting);
 
         if (pointsRepartitionString != null && pointsRepartitionString.Trim().Length > 0)
         {

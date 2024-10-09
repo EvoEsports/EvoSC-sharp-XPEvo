@@ -13,9 +13,6 @@
         <Content 
                 width="{{ width }}" 
                 height="{{ height }}"
-                maxPlayers="{{ maxPlayers }}"
-                pointsLimit="{{ pointsLimit }}"
-                roundsPerMap="{{ roundsPerMap }}"
         />
     </template>
 </component>

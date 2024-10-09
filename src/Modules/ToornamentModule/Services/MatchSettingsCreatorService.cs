@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using EvoSC.Common.Interfaces;
 using EvoSC.Common.Interfaces.Models;
@@ -6,6 +7,7 @@ using EvoSC.Common.Interfaces.Services;
 using EvoSC.Common.Services.Attributes;
 using EvoSC.Common.Services.Models;
 using EvoSC.Common.Util.MatchSettings;
+using EvoSC.Modules.EvoEsports.ServerSyncModule.Interfaces;
 using EvoSC.Modules.EvoEsports.ToornamentModule.Interfaces;
 using EvoSC.Modules.EvoEsports.ToornamentModule.Models;
 using EvoSC.Modules.EvoEsports.ToornamentModule.Settings;
@@ -21,7 +23,8 @@ public class MatchSettingsCreatorService(
     IToornamentService toornamentService,
     IMatchSettingsService matchSettingsService,
     IServerClient serverClient,
-    IDiscordNotifyService notifyService) : IMatchSettingsCreatorService
+    IDiscordNotifyService notifyService,
+    IKeyValueStoreService kvService) : IMatchSettingsCreatorService
 {
     private readonly Random _rng = new();
 
@@ -124,7 +127,10 @@ public class MatchSettingsCreatorService(
 
         await notifyService.NotifyMatchInfoAsync(matchName, mapsToAdd);
 
-        logger.LogDebug("End of CreateMatchSettingsAsync()");
+        kvService.CreateOrUpdateEntry(matchInfo.Id + "-pointsLimit",
+            Encoding.ASCII.GetBytes(settingsData.Scripts.S_PointsLimit.ToString()));
+
+        logger.LogTrace("End of CreateMatchSettingsAsync()");
         return name;
     }
 

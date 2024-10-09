@@ -37,5 +37,6 @@
         <ProjectReference Include="..\MatchReadyModule\MatchReadyModule.csproj" />
         <ProjectReference Include="..\MatchTrackerModule\MatchTrackerModule.csproj" />
         <ProjectReference Include="..\ServerSyncModule\ServerSyncModule.csproj" />
+        <ProjectReference Include="../MatchManagerModule/MatchManagerModule.csproj" />
     </ItemGroup>
 </Project>
