@@ -1,7 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
+﻿using System.Text;
 using EvoSC.Common.Interfaces;
-using EvoSC.Common.Interfaces.Database.Repository;
 using EvoSC.Common.Interfaces.Models;
 using EvoSC.Common.Interfaces.Services;
 using EvoSC.Common.Services.Attributes;
@@ -9,7 +7,6 @@ using EvoSC.Common.Services.Models;
 using EvoSC.Manialinks.Interfaces;
 using EvoSC.Modules.Nsgr.ContactAdminModule.Config;
 using EvoSC.Modules.Nsgr.ContactAdminModule.Interfaces;
-using GbxRemoteNet.Events;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -26,6 +23,8 @@ public class ContactAdminService(
     : IContactAdminService
 {
     private readonly HttpClient _http = new();
+    private DateTime _lastSuccessfulRequest = DateTime.MinValue;
+    private static SemaphoreSlim _requestSemaphore = new(1, 1);
     
     public async Task ShowWidgetAsync()
     {
@@ -41,6 +40,35 @@ public class ContactAdminService(
 
     public async Task ContactAdminAsync(IOnlinePlayer? contextPlayer)
     {
+        await _requestSemaphore.WaitAsync();
+        
+        try
+        {
+            await PerformAdminRequestAsync(contextPlayer);
+        }
+        finally
+        {
+            _requestSemaphore.Release();
+        }
+    }
+
+    private async Task PerformAdminRequestAsync(IOnlinePlayer? contextPlayer)
+    {
+        TimeSpan timeSinceLastRequest = DateTime.UtcNow - _lastSuccessfulRequest;
+        if (timeSinceLastRequest <= TimeSpan.FromSeconds(settings.RequestCooldown))
+        {
+            if (contextPlayer is null)
+            {
+                await chat.InfoMessageAsync($"Already contacted admins {Math.Truncate(timeSinceLastRequest.TotalSeconds)} seconds ago.");
+            }
+            else
+            {
+                await chat.InfoMessageAsync($"Already contacted admins {Math.Truncate(timeSinceLastRequest.TotalSeconds)} seconds ago.", contextPlayer);
+            }
+
+            return;
+        }
+        
         var serverName = await client.Remote.GetServerNameAsync();
 
         var discordMessage = contextPlayer is null
@@ -63,9 +91,10 @@ public class ContactAdminService(
         {
             var response = await _http.PostAsync(settings.WebhookUrl, data);
             if (!response.IsSuccessStatusCode) throw new Exception("The request status code was not successful.");
-            
+
             logger.LogDebug("Successfully executed webhook.");
-            
+            _lastSuccessfulRequest = DateTime.UtcNow;
+
             var chatMessage = contextPlayer is null
                 ? "The admins were contacted."
                 : $"$<{contextPlayer.NickName}$> requested to contact the admins.";
