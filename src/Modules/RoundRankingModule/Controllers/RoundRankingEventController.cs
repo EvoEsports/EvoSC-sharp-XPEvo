@@ -60,6 +60,10 @@ public class RoundRankingEventController(
     public Task OnWarmUpEndRoundAsync(object sender, WarmUpRoundEventArgs args) =>
         roundRankingService.ClearCheckpointDataAsync();
 
+    [Subscribe(ModeScriptEvent.StartMatchStart)]
+    public Task OnStartMatchAsync(object sender, WarmUpRoundEventArgs args) =>
+        roundRankingService.ClearCheckpointDataAsync();
+
     [Subscribe(ModeScriptEvent.StartLine)]
     public Task OnStartLineAsync(object sender, PlayerUpdateEventArgs args) =>
         roundRankingService.RemovePlayerCheckpointDataAsync(args.AccountId);
