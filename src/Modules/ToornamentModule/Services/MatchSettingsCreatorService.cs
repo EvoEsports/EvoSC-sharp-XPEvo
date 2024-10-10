@@ -143,7 +143,7 @@ public class MatchSettingsCreatorService(
             {
                 if (toornamentSettings.UseDefaultGameMode)
                 {
-                    var mode = settingsData.GameMode.ToLowerInvariant() switch
+                    var mode = settingsData.GameMode.Trim().ToLowerInvariant() switch
                     {
                         "rounds" => DefaultModeScriptName.Rounds,
                         "cup" => DefaultModeScriptName.Cup,
@@ -167,7 +167,7 @@ public class MatchSettingsCreatorService(
 
                     var availableCustomModes = toornamentSettings.GameModes.Trim().Split(',');
 
-                    var selectedGameMode = availableCustomModes.FirstOrDefault(gm => gm.ToLowerInvariant().Contains(settingsData.GameMode));
+                    var selectedGameMode = availableCustomModes.FirstOrDefault(gm => gm.Trim().ToLowerInvariant().Contains(settingsData.GameMode));
 
                     if (string.IsNullOrEmpty(selectedGameMode))
                     {

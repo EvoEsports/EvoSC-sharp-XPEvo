@@ -28,9 +28,9 @@ public class DiscordNotifyService(
         var sb = new StringBuilder();
         sb.AppendLine($"The map order for match {matchName} is: ");
         sb.AppendLine();
-        foreach (var map in maps)
+        for (int i = 0; i < maps.Count; i++)
         {
-            sb.AppendLine(map.Name);
+            sb.AppendLine(maps[(i + maps.Count) % maps.Count].Name);
         }
 
         // Check for suffix so we can ping people on Discord
