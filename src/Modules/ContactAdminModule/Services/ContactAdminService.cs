@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace EvoSC.Modules.Nsgr.ContactAdminModule.Services;
 
-[Service(LifeStyle = ServiceLifeStyle.Transient)]
+[Service(LifeStyle = ServiceLifeStyle.Singleton)]
 public class ContactAdminService(
     IManialinkManager manialinkManager,
     ILogger<ContactAdminService> logger,
