@@ -55,6 +55,9 @@ public class ContactAdminService(
     private async Task PerformAdminRequestAsync(IOnlinePlayer? contextPlayer)
     {
         TimeSpan timeSinceLastRequest = DateTime.UtcNow - _lastSuccessfulRequest;
+        
+        logger.LogDebug(timeSinceLastRequest.ToString());
+        
         if (timeSinceLastRequest <= TimeSpan.FromSeconds(settings.RequestCooldown))
         {
             if (contextPlayer is null)
