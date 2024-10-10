@@ -8,7 +8,6 @@ using EvoSC.Manialinks.Interfaces;
 using EvoSC.Modules.Official.RoundRankingModule.Config;
 using EvoSC.Modules.Official.RoundRankingModule.Interfaces;
 using EvoSC.Modules.Official.RoundRankingModule.Models;
-using Microsoft.Extensions.Logging;
 
 namespace EvoSC.Modules.Official.RoundRankingModule.Services;
 
