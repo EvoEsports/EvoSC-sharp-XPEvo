@@ -28,7 +28,7 @@ public class MatchPlayerService(
                     var tmId = opponent.Participant.CustomFields["trackmania_id"];
                     if (tmId is not null)
                     {
-                        player = await playerManagerService.GetOrCreatePlayerAsync(tmId.ToString(),
+                        player = await playerManagerService.GetOrCreatePlayerAsync(tmId.ToString().ToLowerInvariant(),
                             opponent.Participant.Name);
                         players.Add(player);
                     }

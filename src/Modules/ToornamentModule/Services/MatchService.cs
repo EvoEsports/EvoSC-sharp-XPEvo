@@ -72,7 +72,7 @@ public class MatchService(
 
     public async Task EndMatchAsync(ScoresEventArgs timeline)
     {
-        if (stateService.WaitingForMatchStart || stateService.IsInitialSetup || stateService.SetupFinished ||
+        if (string.IsNullOrEmpty(settings.AssignedMatchId) || stateService.WaitingForMatchStart || stateService.IsInitialSetup || stateService.SetupFinished ||
             stateService.MatchEnded)
         {
             logger.LogDebug("Match hasn't been run or completed yet. Not updating MatchGame map on Toornament.");
