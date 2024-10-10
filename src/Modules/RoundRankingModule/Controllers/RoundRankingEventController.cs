@@ -57,7 +57,7 @@ public class RoundRankingEventController(
         roundRankingService.ClearCheckpointDataAsync();
 
     [Subscribe(ModeScriptEvent.WarmUpEndRound)]
-    public Task OnEndRoundAsync(object sender, WarmUpRoundEventArgs args) =>
+    public Task OnWarmUpEndRoundAsync(object sender, WarmUpRoundEventArgs args) =>
         roundRankingService.ClearCheckpointDataAsync();
 
     [Subscribe(ModeScriptEvent.StartLine)]
