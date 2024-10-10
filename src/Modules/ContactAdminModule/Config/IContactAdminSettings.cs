@@ -12,4 +12,7 @@ public interface IContactAdminSettings
 
     [Option(DefaultValue = ""), Description("A suffix that will be added to each message. Can be used for Discord pings")]
     public string MessageSuffix { get; set; }
+    
+    [Option(DefaultValue = 60), Description("Request cooldown for the Webhook.")]
+    public int RequestCooldown { get; set; }
 }
