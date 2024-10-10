@@ -60,4 +60,43 @@ public class DiscordNotifyService(
             logger.LogError(ex, "Failed to execute Discord webhook");
         }
     }
+
+    public async Task NotifyStartingMapAsync(string matchName, string startingMap)
+    {
+        if (string.IsNullOrEmpty(settings.WebhookUrl))
+        {
+            logger.LogDebug("Discord webhook url is not setup, so no matchinfo will be shared");
+            return;
+        }
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"The first map for match {matchName} is {startingMap}");
+
+        // Check for suffix so we can ping people on Discord
+        if (!string.IsNullOrEmpty(settings.MessageSuffix))
+        {
+            sb.AppendLine();
+            sb.AppendLine(settings.MessageSuffix);
+        }
+
+        var messageObject = new { content = sb.ToString() };
+        var json = JsonConvert.SerializeObject(messageObject);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        logger.LogTrace($"Requesting {settings.WebhookUrl}");
+
+        try
+        {
+            var response = await _http.PostAsync(settings.WebhookUrl, data);
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning("Failed to send message to Discord webhook url with starting map");
+            }
+
+            logger.LogDebug("Successfully executed webhook.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to execute Discord webhook");
+        }
+    }
 }

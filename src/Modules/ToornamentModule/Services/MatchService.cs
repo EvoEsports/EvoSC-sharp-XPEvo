@@ -39,7 +39,8 @@ public class MatchService(
     IMatchSettingsCreatorService matchSettingsCreatorService,
     IMatchMapService matchMapService,
     IWhitelistService whitelistService,
-    IMatchPlayerService matchPlayerService
+    IMatchPlayerService matchPlayerService,
+    IDiscordNotifyService notifyService
 ) : IMatchService
 {
     public async Task StartMatchAsync()
@@ -341,6 +342,13 @@ public class MatchService(
 
         logger.LogDebug("Loading the configured matchsetting {0}", stateService.MatchSettingsName);
         await matchSettings.LoadMatchSettingsAsync(stateService.MatchSettingsName + "_warmup", false);
+
+        var currentMap = await server.Remote.GetCurrentMapInfoAsync();
+        var serverName = await server.Remote.GetServerNameAsync();
+        if (currentMap is not null && serverName is not null)
+        {
+            await notifyService.NotifyStartingMapAsync(serverName, currentMap.Name);
+        }
 
         await whitelistService.KickNonWhitelistedPlayers();
 
