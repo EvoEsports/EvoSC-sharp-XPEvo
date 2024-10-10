@@ -55,8 +55,7 @@ public class ContactAdminService(
     private async Task PerformAdminRequestAsync(IOnlinePlayer? contextPlayer)
     {
         TimeSpan timeSinceLastRequest = DateTime.UtcNow - _lastSuccessfulRequest;
-        
-        logger.LogDebug(timeSinceLastRequest.ToString());
+        logger.LogTrace($"Time since last successful webhook request: {timeSinceLastRequest.ToString()}");
         
         if (timeSinceLastRequest <= TimeSpan.FromSeconds(settings.RequestCooldown))
         {
