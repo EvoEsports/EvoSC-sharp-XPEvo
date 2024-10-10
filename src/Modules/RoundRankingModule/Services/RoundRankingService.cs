@@ -4,7 +4,6 @@ using EvoSC.Common.Interfaces.Services;
 using EvoSC.Common.Interfaces.Themes;
 using EvoSC.Common.Services.Attributes;
 using EvoSC.Common.Services.Models;
-using EvoSC.Common.Util.MatchSettings;
 using EvoSC.Manialinks.Interfaces;
 using EvoSC.Modules.Official.RoundRankingModule.Config;
 using EvoSC.Modules.Official.RoundRankingModule.Interfaces;
@@ -28,7 +27,7 @@ public class RoundRankingService(
     private readonly PointsRepartition _pointsRepartition = new();
     private readonly Dictionary<PlayerTeam, string> _teamColors = new();
     private bool _isTimeAttackMode;
-    private bool _isTeamsMode;
+    private bool _isTeamsMode = false;
 
     public async Task ConsumeCheckpointDataAsync(CheckpointData checkpointData)
     {
@@ -122,7 +121,8 @@ public class RoundRankingService(
     public async Task LoadPointsRepartitionFromSettingsAsync()
     {
         var modeScriptSettings = await matchSettingsService.GetCurrentScriptSettingsAsync();
-        var pointsRepartitionString = (string?)modeScriptSettings?.GetValueOrDefault(PointsRepartition.ModeScriptSetting);
+        var pointsRepartitionString =
+            (string?)modeScriptSettings?.GetValueOrDefault(PointsRepartition.ModeScriptSetting);
 
         if (pointsRepartitionString != null && pointsRepartitionString.Trim().Length > 0)
         {
@@ -135,13 +135,6 @@ public class RoundRankingService(
         _isTimeAttackMode = isTimeAttackMode;
 
         return Task.CompletedTask;
-    }
-
-    public async Task DetectModeAsync()
-    {
-        var currentMode = await matchSettingsService.GetCurrentModeAsync();
-        _isTimeAttackMode = currentMode is DefaultModeScriptName.TimeAttack;
-        _isTeamsMode = currentMode is DefaultModeScriptName.Teams or DefaultModeScriptName.TmwtTeams;
     }
 
     public async Task FetchAndCacheTeamInfoAsync()

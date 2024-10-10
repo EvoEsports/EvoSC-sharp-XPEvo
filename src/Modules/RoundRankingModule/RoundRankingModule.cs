@@ -11,7 +11,6 @@ public class RoundRankingModule(IRoundRankingService roundRankingService) : EvoS
     {
         await roundRankingService.LoadPointsRepartitionFromSettingsAsync();
         await roundRankingService.FetchAndCacheTeamInfoAsync();
-        await roundRankingService.DetectModeAsync();
         await roundRankingService.SendRoundRankingWidgetAsync();
     }
 
