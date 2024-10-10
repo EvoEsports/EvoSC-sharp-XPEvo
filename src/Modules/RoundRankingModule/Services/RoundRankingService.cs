@@ -18,8 +18,7 @@ public class RoundRankingService(
     IManialinkManager manialinkManager,
     IMatchSettingsService matchSettingsService,
     IThemeManager theme,
-    IServerClient server,
-    ILogger<RoundRankingService> logger
+    IServerClient server
 ) : IRoundRankingService
 {
     private const string WidgetTemplate = "RoundRankingModule.RoundRanking";
@@ -135,8 +134,6 @@ public class RoundRankingService(
     public Task SetIsTimeAttackModeAsync(bool isTimeAttackMode)
     {
         _isTimeAttackMode = isTimeAttackMode;
-
-        logger.LogInformation("Time attack is {state}", isTimeAttackMode ? "active" : "inactive");
 
         return Task.CompletedTask;
     }
