@@ -53,6 +53,7 @@ public class MatchServiceTest
     private readonly Mock<IMatchMapService> _matchMapServiceMock = new();
     private readonly Mock<IWhitelistService> _whitelistServiceMock = new();
     private readonly Mock<IMatchPlayerService> _matchPlayerServiceMock = new();
+    private readonly Mock<IDiscordNotifyService> _discordNotifyService = new();
 
     public MatchServiceTest(ITestOutputHelper output)
     {
@@ -78,7 +79,8 @@ public class MatchServiceTest
                                         _matchSettingsCreatorService.Object,
                                         _matchMapServiceMock.Object,
                                         _whitelistServiceMock.Object,
-                                        _matchPlayerServiceMock.Object
+                                        _matchPlayerServiceMock.Object,
+                                        _discordNotifyService.Object
                                         );
 
         _auditEventBuilderMock = Mocking.NewAuditEventBuilderMock();

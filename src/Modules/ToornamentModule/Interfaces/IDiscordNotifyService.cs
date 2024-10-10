@@ -4,4 +4,5 @@ namespace EvoSC.Modules.EvoEsports.ToornamentModule.Interfaces;
 public interface IDiscordNotifyService
 {
     Task NotifyMatchInfoAsync(string matchName, List<IMap> maps);
+    Task NotifyStartingMapAsync(string matchName, string startingMap);
 }
