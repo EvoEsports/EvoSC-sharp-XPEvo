@@ -9,6 +9,16 @@
     
     <script>
           <!--
+              *** OnInitialization ***
+              ***
+                  declare ButtonElement <=> Page.GetFirstChild("ContactAdminButton-frame");
+              ***
+          
+              *** OnLoop ***
+              ***
+                  ButtonElement.Visible = !IsSpectatorClient;
+              ***
+          
               *** OnMouseClick ***
               ***
                   if (Event.Control.ControlId == "ContactAdminButton") {
