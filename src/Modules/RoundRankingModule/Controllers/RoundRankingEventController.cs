@@ -20,11 +20,6 @@ public class RoundRankingEventController(
     [Subscribe(ModeScriptEvent.WayPoint)]
     public async Task OnWaypointAsync(object sender, WayPointEventArgs args)
     {
-        if (!roundRankingService.ShouldCollectCheckpointData(args.AccountId))
-        {
-            return;
-        }
-
         var player = await playerManagerService.GetOnlinePlayerAsync(args.AccountId);
 
         await roundRankingService.ConsumeCheckpointDataAsync(new CheckpointData
