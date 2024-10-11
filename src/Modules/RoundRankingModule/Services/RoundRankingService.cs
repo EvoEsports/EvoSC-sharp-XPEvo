@@ -85,6 +85,8 @@ public class RoundRankingService(
 
         if (bestCheckpoints.Count > 0)
         {
+            bestCheckpoints = bestCheckpoints.Take(settings.MaxRows).ToList();
+            
             if (settings.DisplayGainedPoints && !_isTimeAttackMode)
             {
                 SetGainedPointsOnResult(bestCheckpoints);
@@ -107,15 +109,7 @@ public class RoundRankingService(
 
     public bool ShouldCollectCheckpointData(string accountId)
     {
-        lock (_checkpointsRepositoryMutex)
-        {
-            if (_checkpointsRepository.ContainsKey(accountId))
-            {
-                return true;
-            }
-
-            return _checkpointsRepository.Count < settings.MaxRows;
-        }
+        return true;
     }
 
     public async Task LoadPointsRepartitionFromSettingsAsync()
