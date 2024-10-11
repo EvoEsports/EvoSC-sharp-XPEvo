@@ -73,7 +73,13 @@ public class WhitelistService(
         }
 
         var accountId = PlayerUtils.ConvertLoginToAccountId(login);
-        var player = await playerManagerService.GetOrCreatePlayerAsync(accountId);
+        var player = await playerManagerService.GetOrCreatePlayerAsync(accountId.ToLowerInvariant());
+
+        //Skip player if the player is Admin
+        if (player is not null && player.Groups.Any(x => x.Id == 1))
+        {
+            return;
+        }
 
         var guestList = await GetGuestListAsync();
         var whitelistedSpectates = settings.Whitelist.Split(',');
@@ -116,10 +122,10 @@ public class WhitelistService(
             }
 
             var accountId = PlayerUtils.ConvertLoginToAccountId(connectedPlayer.Login);
-            var player = await playerManagerService.GetOrCreatePlayerAsync(accountId);
+            var player = await playerManagerService.GetOrCreatePlayerAsync(accountId.ToLowerInvariant());
 
             //Skip player if the player is Admin
-            if (player.Groups.Any(x => x.Id == 1))
+            if (player is not null && player.Groups.Any(x => x.Id == 1))
             {
                 continue;
             }

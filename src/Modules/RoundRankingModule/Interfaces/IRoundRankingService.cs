@@ -59,12 +59,6 @@ public interface IRoundRankingService
     public Task SetIsTimeAttackModeAsync(bool isTimeAttackMode);
     
     /// <summary>
-    /// Detects the current game mode and sets up the module accordingly.
-    /// </summary>
-    /// <returns></returns>
-    public Task DetectModeAsync();
-    
-    /// <summary>
     /// Gets the latest team infos and caches them.
     /// </summary>
     /// <returns></returns>

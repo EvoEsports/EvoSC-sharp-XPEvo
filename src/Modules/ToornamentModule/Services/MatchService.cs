@@ -39,7 +39,8 @@ public class MatchService(
     IMatchSettingsCreatorService matchSettingsCreatorService,
     IMatchMapService matchMapService,
     IWhitelistService whitelistService,
-    IMatchPlayerService matchPlayerService
+    IMatchPlayerService matchPlayerService,
+    IDiscordNotifyService notifyService
 ) : IMatchService
 {
     public async Task StartMatchAsync()
@@ -72,7 +73,7 @@ public class MatchService(
 
     public async Task EndMatchAsync(ScoresEventArgs timeline)
     {
-        if (stateService.WaitingForMatchStart || stateService.IsInitialSetup || stateService.SetupFinished ||
+        if (string.IsNullOrEmpty(settings.AssignedMatchId) || stateService.WaitingForMatchStart || stateService.IsInitialSetup || stateService.SetupFinished ||
             stateService.MatchEnded)
         {
             logger.LogDebug("Match hasn't been run or completed yet. Not updating MatchGame map on Toornament.");
@@ -152,17 +153,20 @@ public class MatchService(
     public async Task SetMatchGameMapAsync()
     {
         logger.LogDebug("Begin of SetMatchGameMapAsync()");
-        if (!stateService.MatchInProgress)
-        {
-            logger.LogDebug("Match hasn't started yet. Not updating MatchGame map on Toornament.");
-            return;
-        }
 
         var currentMap = await server.Remote.GetCurrentMapInfoAsync();
 
         if (currentMap is null)
         {
             logger.LogWarning("Current map could not be determined");
+            return;
+        }
+
+        logger.LogDebug("Current map is {mapName}", currentMap.Name);
+
+        if (!stateService.MatchInProgress)
+        {
+            logger.LogDebug("Match hasn't started yet. Not updating MatchGame map on Toornament.");
             return;
         }
 
@@ -181,6 +185,7 @@ public class MatchService(
             if (currentMap.Name.ToLowerInvariant().Contains(name))
             {
                 toornamentMapName = name;
+                logger.LogDebug("Determined mapname {mapName}", toornamentMapName);
                 break;
             }
         }
@@ -188,6 +193,10 @@ public class MatchService(
         if (!string.IsNullOrEmpty(toornamentMapName))
         {
             await toornamentService.SetMatchGameMapAsync(settings.AssignedMatchId, 1, toornamentMapName);
+        }
+        else
+        {
+            logger.LogWarning("Couldn't determine mapname, please update the current map on Toornament manually to {servermap}", currentMap.Name);
         }
 
         logger.LogDebug("End of SetMatchGameMapAsync()");
@@ -333,6 +342,13 @@ public class MatchService(
 
         logger.LogDebug("Loading the configured matchsetting {0}", stateService.MatchSettingsName);
         await matchSettings.LoadMatchSettingsAsync(stateService.MatchSettingsName + "_warmup", false);
+
+        var currentMap = await server.Remote.GetCurrentMapInfoAsync();
+        var serverName = await server.Remote.GetServerNameAsync();
+        if (currentMap is not null && serverName is not null)
+        {
+            await notifyService.NotifyStartingMapAsync(serverName, currentMap.Name);
+        }
 
         await whitelistService.KickNonWhitelistedPlayers();
 

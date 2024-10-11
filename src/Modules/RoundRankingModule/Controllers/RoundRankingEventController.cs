@@ -48,17 +48,29 @@ public class RoundRankingEventController(
     }
 
     [Subscribe(ModeScriptEvent.EndRoundEnd)]
-    public Task OnStartRoundAsync(object sender, EventArgs args) =>
+    public Task OnEndRoundAsync(object sender, EventArgs args) =>
+        roundRankingService.ClearCheckpointDataAsync();
+
+    [Subscribe(ModeScriptEvent.WarmUpEndRound)]
+    public Task OnWarmUpEndRoundAsync(object sender, WarmUpRoundEventArgs args) =>
+        roundRankingService.ClearCheckpointDataAsync();
+
+    [Subscribe(ModeScriptEvent.StartMatchStart)]
+    public Task OnStartMatchAsync(object sender, WarmUpRoundEventArgs args) =>
         roundRankingService.ClearCheckpointDataAsync();
 
     [Subscribe(ModeScriptEvent.StartLine)]
     public Task OnStartLineAsync(object sender, PlayerUpdateEventArgs args) =>
         roundRankingService.RemovePlayerCheckpointDataAsync(args.AccountId);
 
+    [Subscribe(ModeScriptEvent.Respawn)]
+    public Task OnRespawnAsync(object sender, PlayerUpdateEventArgs args) =>
+        roundRankingService.RemovePlayerCheckpointDataAsync(args.AccountId);
+
     [Subscribe(ModeScriptEvent.PodiumStart)]
     public Task OnPodiumStartAsync(object sender, EventArgs args) =>
         roundRankingService.HideRoundRankingWidgetAsync();
-    
+
     [Subscribe(GbxRemoteEvent.BeginMap)]
     public async Task OnStartMapAsync(object sender, EventArgs args)
     {
@@ -73,5 +85,5 @@ public class RoundRankingEventController(
 
     [Subscribe(ModeScriptEvent.WarmUpEnd)]
     public Task OnWarmUpEndAsync(object sender, EventArgs args) =>
-        roundRankingService.DetectModeAsync();
+        roundRankingService.SetIsTimeAttackModeAsync(false);
 }
