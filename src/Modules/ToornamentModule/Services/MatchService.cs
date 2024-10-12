@@ -228,9 +228,11 @@ public class MatchService(
             stages = await toornamentService.GetStagesAsync(selectedTournamentId);
             if (!string.IsNullOrEmpty(selectedStageId))
             {
-                matches = await toornamentService.GetMatchesAsync(selectedTournamentId, selectedStageId);
+                var matchList = await toornamentService.GetMatchesAsync(selectedTournamentId, selectedStageId);
                 groups = await toornamentService.GetGroupsAsync(selectedTournamentId, selectedStageId);
                 rounds = await toornamentService.GetRoundsAsync(selectedTournamentId, selectedStageId);
+
+                matches = matchList.Where(t => t.Status != "completed").ToList();
             }
         }
 
