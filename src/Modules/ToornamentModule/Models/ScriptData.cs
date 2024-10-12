@@ -35,4 +35,7 @@ public class ScriptData
 
     [JsonPropertyName("S_UseTieBreak")]
     public bool S_UseTieBreak { get; set; } = false;
+
+    [JsonPropertyName("S_ChatTime")]
+    public int S_ChatTime { get; set; } = 60;
 }
